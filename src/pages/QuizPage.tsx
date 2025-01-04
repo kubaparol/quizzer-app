@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Button,
   Empty,
@@ -124,7 +125,7 @@ export function QuizPage() {
 
   return (
     <>
-      <div className="grid gap-6 border-4 rounded-xl p-6 w-full max-w-3xl">
+      <div className="grid gap-6 p-8 w-full max-w-3xl bg-white/80 backdrop-blur-sm rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/20">
         <Progress
           percent={((currentQuestion + 1) / questions.length) * 100}
           format={() => `${currentQuestion + 1}/${questions.length}`}
@@ -135,9 +136,17 @@ export function QuizPage() {
           }}
         />
 
-        <p className="text-xl font-bold text-center">
-          {questions[currentQuestion].question}
-        </p>
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={currentQuestion}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="text-xl font-bold text-center"
+          >
+            {questions[currentQuestion].question}
+          </motion.p>
+        </AnimatePresence>
 
         <Form
           form={form}
@@ -151,15 +160,30 @@ export function QuizPage() {
             rules={[{ required: true, message: "Please select an answer" }]}
           >
             <Radio.Group>
-              <Space direction="vertical" size="large">
-                {questions[currentQuestion].shuffled_answers.map(
-                  (answer, index) => (
-                    <Radio key={index} value={answer}>
-                      {answer}
-                    </Radio>
-                  )
-                )}
-              </Space>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentQuestion}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ staggerChildren: 0.1 }}
+                >
+                  <Space direction="vertical" size="large">
+                    {questions[currentQuestion].shuffled_answers.map(
+                      (answer, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                        >
+                          <Radio value={answer}>{answer}</Radio>
+                        </motion.div>
+                      )
+                    )}
+                  </Space>
+                </motion.div>
+              </AnimatePresence>
             </Radio.Group>
           </Form.Item>
 

@@ -91,7 +91,7 @@ export function SuccessModal(props: SuccessModalProps) {
           </Button>
 
           <Button type="primary" onClick={onClose}>
-            Go Home
+            Finish
           </Button>
         </div>
       </Space>
