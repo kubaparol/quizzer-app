@@ -11,11 +11,13 @@ export interface Question {
   shuffled_answers: string[];
 }
 
-export const useQuestions = (args: FieldType) => {
+export const useQuestions = (args: FieldType | null) => {
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
 
   useEffect(() => {
+    if (!args) return;
+
     const fetchQuestions = () => {
       const questions = FAKE_QUESTIONS.filter((question) => {
         return (

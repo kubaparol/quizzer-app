@@ -21,7 +21,6 @@ export function MainPage() {
   };
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    console.log("Success:", values);
     navigate(AppUrls.quiz, { state: values });
   };
 
@@ -72,11 +71,6 @@ export function MainPage() {
                 type: "number",
                 min: 1,
                 message: "Minimum 1 question required!",
-              },
-              {
-                type: "number",
-                max: 5,
-                message: "Maximum 5 questions allowed!",
               },
             ]}
           >
