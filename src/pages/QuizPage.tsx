@@ -125,7 +125,7 @@ export function QuizPage() {
 
   return (
     <>
-      <div className="grid gap-6 border-4 rounded-xl p-6 w-full max-w-3xl">
+      <div className="grid gap-6 p-8 w-full max-w-3xl bg-white/80 backdrop-blur-sm rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/20">
         <Progress
           percent={((currentQuestion + 1) / questions.length) * 100}
           format={() => `${currentQuestion + 1}/${questions.length}`}

@@ -1,5 +1,6 @@
 import { Button, Form, InputNumber, Modal, Select } from "antd";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { FormProps } from "antd";
 import { useNavigate } from "react-router-dom";
 import { AppUrls } from "../router/urls";
@@ -27,92 +28,136 @@ export function MainPage() {
   return (
     <>
       <div className="grid place-items-center gap-4">
-        <header className="grid gap-2">
+        <motion.header
+          className="grid gap-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
           <h1 className="text-4xl font-bold text-center">
             Welcome to Quizzer!
           </h1>
 
-          <p className="text-lg text-center">
+          <motion.p
+            className="text-lg text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
             Test your knowledge with our exciting quizzes on various topics!
-          </p>
-        </header>
+          </motion.p>
+        </motion.header>
 
-        <Button
-          type="primary"
-          size="large"
-          onClick={() => setIsModalOpen(true)}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          Start Quiz
-        </Button>
+          <Button
+            type="primary"
+            size="large"
+            onClick={() => setIsModalOpen(true)}
+            className="shadow-lg hover:shadow-xl transition-shadow"
+          >
+            Start Quiz
+          </Button>
+        </motion.div>
       </div>
 
-      <Modal
-        title="Quiz Configuration"
-        open={isModalOpen}
-        footer={null}
-        onCancel={handleClose}
-      >
-        <Form
-          form={form}
-          name="basic"
-          layout="vertical"
-          onFinish={onFinish}
-          autoComplete="off"
-        >
-          <Form.Item<FieldType>
-            label="Number of Questions"
-            name="amount"
-            rules={[
-              {
-                required: true,
-                message: "Please input the number of questions!",
-              },
-              {
-                type: "number",
-                min: 1,
-                message: "Minimum 1 question required!",
-              },
-            ]}
+      <AnimatePresence>
+        {isModalOpen && (
+          <Modal
+            title="Quiz Configuration"
+            open={isModalOpen}
+            footer={null}
+            onCancel={handleClose}
+            modalRender={(modal) => (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+              >
+                {modal}
+              </motion.div>
+            )}
           >
-            <InputNumber className="w-full" />
-          </Form.Item>
+            <Form
+              form={form}
+              name="basic"
+              layout="vertical"
+              onFinish={onFinish}
+              autoComplete="off"
+            >
+              {[
+                {
+                  label: "Number of Questions",
+                  name: "amount",
+                  component: <InputNumber className="w-full" />,
+                },
+                {
+                  label: "Category",
+                  name: "category",
+                  component: (
+                    <Select
+                      options={CATEGORIES.map((category) => ({
+                        ...category,
+                        label: <span>{category.label}</span>,
+                      }))}
+                    />
+                  ),
+                },
+                {
+                  label: "Difficulty",
+                  name: "difficulty",
+                  component: (
+                    <Select
+                      options={[
+                        { value: "easy", label: <span>Easy</span> },
+                        { value: "medium", label: <span>Medium</span> },
+                        { value: "hard", label: <span>Hard</span> },
+                      ]}
+                    />
+                  ),
+                },
+              ].map((field, index) => (
+                <motion.div
+                  key={field.name}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Form.Item
+                    label={field.label}
+                    name={field.name}
+                    rules={[
+                      {
+                        required: true,
+                        message: `Please input the ${field.label.toLowerCase()}!`,
+                      },
+                    ]}
+                  >
+                    {field.component}
+                  </Form.Item>
+                </motion.div>
+              ))}
 
-          <Form.Item<FieldType>
-            label="Category"
-            name="category"
-            rules={[{ required: true, message: "Please input the category!" }]}
-          >
-            <Select
-              options={CATEGORIES.map((category) => ({
-                ...category,
-                label: <span>{category.label}</span>,
-              }))}
-            />
-          </Form.Item>
-
-          <Form.Item<FieldType>
-            label="Difficulty"
-            name="difficulty"
-            rules={[
-              { required: true, message: "Please input the difficulty!" },
-            ]}
-          >
-            <Select
-              options={[
-                { value: "easy", label: <span>Easy</span> },
-                { value: "medium", label: <span>Medium</span> },
-                { value: "hard", label: <span>Hard</span> },
-              ]}
-            />
-          </Form.Item>
-
-          <Form.Item label={null} className="flex justify-end">
-            <Button type="primary" htmlType="submit">
-              Start
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <Form.Item label={null} className="flex justify-end">
+                  <Button type="primary" htmlType="submit">
+                    Start
+                  </Button>
+                </Form.Item>
+              </motion.div>
+            </Form>
+          </Modal>
+        )}
+      </AnimatePresence>
     </>
   );
 }
