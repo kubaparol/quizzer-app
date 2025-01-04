@@ -21,8 +21,14 @@ export function QuizPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [allAnswers, setAllAnswers] = useState<string[]>([]);
   const location = useLocation();
-  const values = location.state as FieldType;
+  const values = location.state as FieldType | null;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!values) {
+      navigate(AppUrls.home, { replace: true });
+    }
+  }, [navigate, values]);
 
   const { questions, isLoading } = useQuestions(values);
 
@@ -31,12 +37,11 @@ export function QuizPage() {
   const [isNotEnoughQuestionsModalOpen, setIsNotEnoughQuestionsModalOpen] =
     useState(false);
 
-  // Add check after questions fetch
   useEffect(() => {
-    if (questions.length > 0 && questions.length < Number(values.amount)) {
+    if (questions.length > 0 && questions.length < Number(values?.amount)) {
       setIsNotEnoughQuestionsModalOpen(true);
     }
-  }, [questions, values.amount]);
+  }, [questions, values?.amount]);
 
   const handleFinish = () => {
     const currentAnswer = form.getFieldValue(["answers", currentQuestion]);
@@ -57,7 +62,6 @@ export function QuizPage() {
     setCurrentQuestion(0);
     setAllAnswers([]);
     form.resetFields();
-    navigate(AppUrls.quiz, { replace: true });
   };
 
   const handleClose = () => {
@@ -89,12 +93,12 @@ export function QuizPage() {
                 <Typography.Text className="text-gray-500 text-base block leading-relaxed">
                   Category:{" "}
                   <span className="font-semibold">
-                    {values.category || "Any"}
+                    {values?.category || "Any"}
                   </span>
                   <br />
                   Difficulty:{" "}
                   <span className="font-semibold">
-                    {values.difficulty || "Any"}
+                    {values?.difficulty || "Any"}
                   </span>
                 </Typography.Text>
               </div>
