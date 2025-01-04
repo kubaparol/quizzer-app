@@ -113,6 +113,7 @@ export function MainPage() {
               options={[
                 { value: "multiple", label: <span>Multiple Choice</span> },
                 { value: "boolean", label: <span>True / False</span> },
+                { value: undefined, label: <span>Mixed</span> },
               ]}
             />
           </Form.Item>
