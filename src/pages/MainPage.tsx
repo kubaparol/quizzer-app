@@ -111,8 +111,8 @@ export function MainPage() {
           >
             <Select
               options={[
-                { value: "boolean", label: <span>True / False</span> },
                 { value: "multiple", label: <span>Multiple Choice</span> },
+                { value: "boolean", label: <span>True / False</span> },
               ]}
             />
           </Form.Item>
