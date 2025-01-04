@@ -1,17 +1,19 @@
 import { Button, Form, InputNumber, Modal, Select } from "antd";
 import { useState } from "react";
 import type { FormProps } from "antd";
+import { useNavigate } from "react-router-dom";
+import { AppUrls } from "../router/urls";
 
-type FieldType = {
+export type FieldType = {
   amount: string;
   category: string;
-  difficulty: "EASY" | "MEDIUM" | "HARD";
-  type: "BOOLEAN" | "MULTIPLE";
+  difficulty: "easy" | "medium" | "hard";
 };
 
 export function MainPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm<FieldType>();
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setIsModalOpen(false);
@@ -20,6 +22,7 @@ export function MainPage() {
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     console.log("Success:", values);
+    navigate(AppUrls.quiz, { state: values });
   };
 
   return (
@@ -70,6 +73,11 @@ export function MainPage() {
                 min: 1,
                 message: "Minimum 1 question required!",
               },
+              {
+                type: "number",
+                max: 5,
+                message: "Maximum 5 questions allowed!",
+              },
             ]}
           >
             <InputNumber className="w-full" />
@@ -100,19 +108,6 @@ export function MainPage() {
                 { value: "easy", label: <span>Easy</span> },
                 { value: "medium", label: <span>Medium</span> },
                 { value: "hard", label: <span>Hard</span> },
-              ]}
-            />
-          </Form.Item>
-
-          <Form.Item<FieldType>
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: "Please input the type!" }]}
-          >
-            <Select
-              options={[
-                { value: "multiple", label: <span>Multiple Choice</span> },
-                { value: "boolean", label: <span>True / False</span> },
               ]}
             />
           </Form.Item>
