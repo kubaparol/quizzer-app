@@ -1,12 +1,17 @@
 import { useState } from "react";
-import { Button, Form, Progress, Radio, Space } from "antd";
-import { shuffleArray } from "../utils";
+import { Button, Form, Progress, Radio, Space, Spin } from "antd";
+import { useQuestions } from "../hooks";
+import { useLocation } from "react-router-dom";
+import { FieldType } from "./MainPage";
 
 export function QuizPage() {
   const [form] = Form.useForm();
-  const [questions] = useState(EXAMPLE_RESPONSE.results);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [allAnswers, setAllAnswers] = useState<string[]>([]);
+  const location = useLocation();
+  const values = location.state as FieldType;
+
+  const { questions, isLoading } = useQuestions(values);
 
   const onFinish = () => {
     const currentAnswer = form.getFieldValue(["answers", currentQuestion]);
@@ -23,6 +28,10 @@ export function QuizPage() {
   };
 
   const hasNextQuestion = currentQuestion < questions.length - 1;
+
+  if (isLoading) {
+    return <Spin size="large" />;
+  }
 
   return (
     <div className="grid gap-6 border-4 rounded-xl p-6 w-full max-w-3xl">
@@ -77,112 +86,3 @@ export function QuizPage() {
     </div>
   );
 }
-
-const EXAMPLE_RESPONSE = {
-  response_code: 0,
-  results: [
-    {
-      type: "multiple",
-      difficulty: "medium",
-      category: "Art",
-      question: "Who painted the epic mural Guernica?",
-      correct_answer: "Pablo Picasso",
-      incorrect_answers: [
-        "Francisco Goya",
-        "Leonardo da Vinci",
-        "Henri Matisse",
-      ],
-    },
-    {
-      type: "multiple",
-      difficulty: "medium",
-      category: "Art",
-      question:
-        "Which artist&#039;s style was to use small different colored dots to create a picture?",
-      correct_answer: "Georges Seurat",
-      incorrect_answers: [
-        "Paul C&eacute;zanne",
-        "Vincent Van Gogh",
-        "Henri Rousseau",
-      ],
-    },
-    {
-      type: "boolean",
-      difficulty: "medium",
-      category: "Art",
-      question:
-        "Pablo Picasso is one of the founding fathers of &quot;Cubism.&quot;",
-      correct_answer: "True",
-      incorrect_answers: ["False"],
-    },
-    {
-      type: "multiple",
-      difficulty: "hard",
-      category: "Art",
-      question: "What year was the Mona Lisa finished?",
-      correct_answer: "1504",
-      incorrect_answers: ["1487", "1523", "1511"],
-    },
-    {
-      type: "multiple",
-      difficulty: "hard",
-      category: "Art",
-      question:
-        "Which of these is not an additional variation of the color purple?",
-      correct_answer: "Kobicha",
-      incorrect_answers: ["Byzantium", "Pomp and Power", "Palatinate"],
-    },
-    {
-      type: "multiple",
-      difficulty: "easy",
-      category: "Art",
-      question: "Who sculpted the statue of David?",
-      correct_answer: "Michelangelo",
-      incorrect_answers: ["Gian Lorenzo Bernini", "Auguste Rodin", "Donatello"],
-    },
-    {
-      type: "multiple",
-      difficulty: "medium",
-      category: "Art",
-      question:
-        "Which time signature is commonly known as &ldquo;Cut Time?&rdquo;",
-      correct_answer: "2/2",
-      incorrect_answers: ["4/4", "6/8", "3/4"],
-    },
-    {
-      type: "multiple",
-      difficulty: "easy",
-      category: "Art",
-      question:
-        "Which Van Gogh painting depicts the view from his asylum in Saint-R&eacute;my-de-Provence in southern France?",
-      correct_answer: "The Starry Night",
-      incorrect_answers: [
-        "Wheatfields with Crows",
-        "The Sower with Setting Sun",
-        "The Church at Auvers",
-      ],
-    },
-    {
-      type: "multiple",
-      difficulty: "easy",
-      category: "Art",
-      question: "Who painted the Mona Lisa?",
-      correct_answer: "Leonardo da Vinci",
-      incorrect_answers: ["Pablo Picasso", "Claude Monet", "Vincent van Gogh"],
-    },
-    {
-      type: "boolean",
-      difficulty: "medium",
-      category: "Art",
-      question: "Vincent van Gogh cut off one of his ears.",
-      correct_answer: "True",
-      incorrect_answers: ["False"],
-    },
-  ].map((question) => ({
-    ...question,
-    shuffled_answers: shuffleArray([
-      question.correct_answer,
-      ...question.incorrect_answers,
-    ]),
-  })),
-};
