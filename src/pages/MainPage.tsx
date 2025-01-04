@@ -1,6 +1,8 @@
 import { Button, Form, InputNumber, Modal, Select } from "antd";
 import { useState } from "react";
 import type { FormProps } from "antd";
+import { useNavigate } from "react-router-dom";
+import { AppUrls } from "../router/urls";
 
 type FieldType = {
   amount: string;
@@ -12,6 +14,7 @@ type FieldType = {
 export function MainPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm<FieldType>();
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setIsModalOpen(false);
@@ -20,6 +23,7 @@ export function MainPage() {
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     console.log("Success:", values);
+    navigate(AppUrls.quiz);
   };
 
   return (
