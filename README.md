@@ -81,3 +81,10 @@ We welcome contributions to the Quizzer App! To contribute, please follow these 
 5. Open a pull request to the main repository.
 
 Please ensure your code follows our coding standards and includes appropriate tests.
+
+## Contact
+
+Feel free to contact me! You can find me here:
+
+- [LinkedIn](https://www.linkedin.com/in/jakub-parol/)
+- [GitHub](https://github.com/kubaparol)
